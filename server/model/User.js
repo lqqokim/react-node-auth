@@ -61,15 +61,30 @@ userSchema.methods.comparePassword = function (plainPassword, callback) {
     })
 }
 
-userSchema.methods.generateToken = function(callback) {
+userSchema.methods.generateToken = function (callback) {
     const user = this;
     const token = jwt.sign(user._id.toHexString(), 'secretToken');
-    
+
     user.token = token;
-    user.save(function(err, user) {
-        if(err) return callback(err);
+    user.save(function (err, user) {
+        if (err) return callback(err);
         callback(null, user);
     })
+}
+
+userSchema.statics.findByToken = function (token, cb) {
+    const user = this;
+
+    // 토큰을 decode
+    jwt.verify(token, 'secretToken', function (err, decode) {
+        user.findOne({
+            _id: decode,
+            token: token
+        }, function (err, user) {
+            if (err) return cb(err);
+            cb(null, user);
+        });
+    });
 }
 
 const User = mongoose.model('User', userSchema);
