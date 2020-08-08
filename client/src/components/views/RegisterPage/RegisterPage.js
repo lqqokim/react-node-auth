@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../../../_actions/user_action';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom'; // props history 시용
 function RegisterPage(props) {
     const dispatch = useDispatch();
 
